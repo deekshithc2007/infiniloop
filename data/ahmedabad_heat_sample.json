@@ -1,0 +1,422 @@
+{
+  "metadata": {
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "country": "India",
+    "dataset_label": "Synthetic / Demo Climate & Urban Vulnerability Sample Dataset",
+    "disclaimer": "All satellite LST, vegetation, demographic, and baseline cooling figures in this demonstration dataset are realistic synthetic estimates structured for HeatWise AI prototype validation. Live weather readings can be fetched optionally via Open-Meteo.",
+    "default_observation_date": "2026-05-18",
+    "historical_dates": ["2026-03-15", "2026-04-15", "2026-05-18"]
+  },
+  "data_sources": [
+    {
+      "code": "LANDSAT_LST",
+      "name": "NASA/USGS Landsat 8 & 9 Thermal Infrared (LST)",
+      "provider": "NASA / USGS",
+      "category": "Satellite Land-Surface Temperature",
+      "spatial_resolution": "30m (resampled from 100m TIRS)",
+      "update_cadence": "16-day revisit (8-day combined)",
+      "data_nature": "Synthetic",
+      "api_endpoint": "https://urs.earthdata.nasa.gov",
+      "requires_api_key": true,
+      "status": "Demo Sample Fallback",
+      "notes": "Provides surface skin temperature (LST), distinct from ambient 2m air temperature."
+    },
+    {
+      "code": "SENTINEL2_NDVI",
+      "name": "Copernicus Sentinel-2 Multispectral (NDVI & Built-up)",
+      "provider": "European Space Agency (ESA)",
+      "category": "Vegetation & Land Cover",
+      "spatial_resolution": "10m",
+      "update_cadence": "5-day revisit",
+      "data_nature": "Synthetic",
+      "api_endpoint": "https://services.sentinel-hub.com",
+      "requires_api_key": true,
+      "status": "Demo Sample Fallback",
+      "notes": "Computes NDVI vegetation coverage and NDBI built-up intensity."
+    },
+    {
+      "code": "GEE_PIPELINE",
+      "name": "Google Earth Engine Cloud Processing",
+      "provider": "Google Earth Engine",
+      "category": "Geospatial Aggregation",
+      "spatial_resolution": "10m–30m zonal statistics",
+      "update_cadence": "On-demand / Monthly composite",
+      "data_nature": "Derived",
+      "api_endpoint": "https://earthengine.googleapis.com",
+      "requires_api_key": true,
+      "status": "Configured Schema / Demo",
+      "notes": "Cloud masking and ward-level zonal statistics pipeline."
+    },
+    {
+      "code": "OPEN_METEO",
+      "name": "Open-Meteo Weather & Historical Archive",
+      "provider": "Open-Meteo",
+      "category": "Ambient Air Temperature & Humidity",
+      "spatial_resolution": "~9–11 km ERA5 / Forecast grid",
+      "update_cadence": "Hourly",
+      "data_nature": "Real",
+      "api_endpoint": "https://api.open-meteo.com/v1/forecast",
+      "requires_api_key": false,
+      "status": "Live Connector + Fallback",
+      "notes": "Provides 2m air temperature and relative humidity; falls back to labelled sample values when offline."
+    },
+    {
+      "code": "OSM_OVERPASS",
+      "name": "OpenStreetMap Roads, Buildings & Amenities",
+      "provider": "OpenStreetMap Contributors",
+      "category": "Urban Morphology & Cooling Infrastructure",
+      "spatial_resolution": "Vector features",
+      "update_cadence": "Continuous",
+      "data_nature": "Real",
+      "api_endpoint": "https://overpass-api.de/api/interpreter",
+      "requires_api_key": false,
+      "status": "Basemap Active / Amenities Demo",
+      "notes": "Powers interactive Leaflet basemap and public water/shelter inventory."
+    },
+    {
+      "code": "CENSUS_INDIA",
+      "name": "Census of India Aggregated Ward Demographics",
+      "provider": "Office of the Registrar General & Census Commissioner",
+      "category": "Social Vulnerability Indicators",
+      "spatial_resolution": "Ward / Neighbourhood aggregate",
+      "update_cadence": "Decadal + Municipal projections",
+      "data_nature": "Estimated",
+      "api_endpoint": "",
+      "requires_api_key": false,
+      "status": "Demo Sample Fallback",
+      "notes": "Aggregated elderly population, housing vulnerability, and outdoor workforce ratios. No PII stored."
+    },
+    {
+      "code": "COMMUNITY_REPORTS",
+      "name": "HeatWise Resident Community Reports",
+      "provider": "Local Residents & NGOs",
+      "category": "Crowdsourced Ground Truth",
+      "spatial_resolution": "Point / Street-level",
+      "update_cadence": "Real-time (moderated)",
+      "data_nature": "Real",
+      "api_endpoint": "/api/reports",
+      "requires_api_key": false,
+      "status": "Active",
+      "notes": "Moderated field observations of missing shade, water, and extreme heat hotspots."
+    },
+    {
+      "code": "IOT_SENSORS",
+      "name": "Optional Municipal IoT Microclimate Nodes",
+      "provider": "Municipal Smart City / Pilot Sensors",
+      "category": "Hyperlocal Air Temp & Heat Index",
+      "spatial_resolution": "Point sensor (500m radius)",
+      "update_cadence": "15-minute intervals",
+      "data_nature": "Synthetic",
+      "api_endpoint": "",
+      "requires_api_key": true,
+      "status": "Optional Integration",
+      "notes": "Demonstrates missing-data resilience when a sensor node is offline."
+    }
+  ],
+  "cooling_assets": [
+    {"id": "CA-01", "type": "Drinking Water Station", "name": "Sabarmati Riverfront Water Kiosk", "lat": 23.031, "lng": 72.573, "neighbourhood_code": "AMD-NAV"},
+    {"id": "CA-02", "type": "Cooling Shelter", "name": "Maninagar Municipal Cooling Centre", "lat": 22.998, "lng": 72.608, "neighbourhood_code": "AMD-MAN"},
+    {"id": "CA-03", "type": "Shaded Park", "name": "Vastrapur Lake Shaded Promenade", "lat": 23.036, "lng": 72.531, "neighbourhood_code": "AMD-VAS"},
+    {"id": "CA-04", "type": "Drinking Water Station", "name": "Kalupur Railway Concourse Water Point", "lat": 23.027, "lng": 72.601, "neighbourhood_code": "AMD-KAL"},
+    {"id": "CA-05", "type": "Shaded Park", "name": "Parimal Garden Green Buffer", "lat": 23.021, "lng": 72.559, "neighbourhood_code": "AMD-SAT"},
+    {"id": "CA-06", "type": "Cooling Shelter", "name": "Chandkheda Community Hall Shelter", "lat": 23.106, "lng": 72.587, "neighbourhood_code": "AMD-CHA"},
+    {"id": "CA-07", "type": "Drinking Water Station", "name": "Naroda GIDC Gate Drinking Point", "lat": 23.066, "lng": 72.647, "neighbourhood_code": "AMD-NAR"}
+  ],
+  "neighbourhoods": [
+    {
+      "code": "AMD-NAR",
+      "name": "Naroda Industrial Estate",
+      "zone": "East Industrial Zone",
+      "ward_number": "Ward 14",
+      "population_estimate": 92400,
+      "area_sq_km": 6.8,
+      "centroid_lat": 23.068,
+      "centroid_lng": 72.651,
+      "cooling_shelters_count": 1,
+      "public_water_points_count": 2,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.638, 23.058], [72.665, 23.058], [72.665, 23.078], [72.638, 23.078], [72.638, 23.058]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 42.8, "air_temp_c": 35.9, "relative_humidity_pct": 24, "ndvi_vegetation_pct": 7.5, "built_up_intensity_pct": 89.0, "albedo_index": 0.17, "elderly_pct": 9.8, "low_income_housing_pct": 54.0, "outdoor_worker_pct": 68.0, "healthcare_distance_km": 3.4, "cooling_facility_coverage_pct": 14.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 46.9, "air_temp_c": 40.4, "relative_humidity_pct": 20, "ndvi_vegetation_pct": 7.0, "built_up_intensity_pct": 89.0, "albedo_index": 0.17, "elderly_pct": 9.8, "low_income_housing_pct": 54.0, "outdoor_worker_pct": 68.0, "healthcare_distance_km": 3.4, "cooling_facility_coverage_pct": 14.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 51.2, "air_temp_c": 44.1, "relative_humidity_pct": 18, "ndvi_vegetation_pct": 6.4, "built_up_intensity_pct": 89.5, "albedo_index": 0.16, "elderly_pct": 9.8, "low_income_housing_pct": 54.0, "outdoor_worker_pct": 68.0, "healthcare_distance_km": 3.4, "cooling_facility_coverage_pct": 14.0}
+      ]
+    },
+    {
+      "code": "AMD-VAT",
+      "name": "Vatva GIDC & Residential",
+      "zone": "South-East Industrial",
+      "ward_number": "Ward 41",
+      "population_estimate": 114200,
+      "area_sq_km": 7.9,
+      "centroid_lat": 22.970,
+      "centroid_lng": 72.633,
+      "cooling_shelters_count": 1,
+      "public_water_points_count": 2,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.618, 22.958], [72.648, 22.958], [72.648, 22.982], [72.618, 22.982], [72.618, 22.958]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 42.1, "air_temp_c": 35.6, "relative_humidity_pct": 25, "ndvi_vegetation_pct": 8.8, "built_up_intensity_pct": 84.0, "albedo_index": 0.18, "elderly_pct": 10.4, "low_income_housing_pct": 61.0, "outdoor_worker_pct": 71.0, "healthcare_distance_km": 3.8, "cooling_facility_coverage_pct": 11.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 46.3, "air_temp_c": 40.1, "relative_humidity_pct": 21, "ndvi_vegetation_pct": 8.2, "built_up_intensity_pct": 84.0, "albedo_index": 0.18, "elderly_pct": 10.4, "low_income_housing_pct": 61.0, "outdoor_worker_pct": 71.0, "healthcare_distance_km": 3.8, "cooling_facility_coverage_pct": 11.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 50.6, "air_temp_c": 43.8, "relative_humidity_pct": 19, "ndvi_vegetation_pct": 7.6, "built_up_intensity_pct": 84.5, "albedo_index": 0.18, "elderly_pct": 10.4, "low_income_housing_pct": 61.0, "outdoor_worker_pct": 71.0, "healthcare_distance_km": 3.8, "cooling_facility_coverage_pct": 11.0}
+      ]
+    },
+    {
+      "code": "AMD-JAM",
+      "name": "Jamalpur Old City",
+      "zone": "Central Heritage Zone",
+      "ward_number": "Ward 23",
+      "population_estimate": 86500,
+      "area_sq_km": 2.9,
+      "centroid_lat": 23.012,
+      "centroid_lng": 72.584,
+      "cooling_shelters_count": 1,
+      "public_water_points_count": 3,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.575, 23.005], [72.593, 23.005], [72.593, 23.020], [72.575, 23.020], [72.575, 23.005]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 41.9, "air_temp_c": 35.8, "relative_humidity_pct": 24, "ndvi_vegetation_pct": 5.5, "built_up_intensity_pct": 93.0, "albedo_index": 0.16, "elderly_pct": 15.6, "low_income_housing_pct": 58.0, "outdoor_worker_pct": 55.0, "healthcare_distance_km": 2.1, "cooling_facility_coverage_pct": 18.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 45.8, "air_temp_c": 40.3, "relative_humidity_pct": 21, "ndvi_vegetation_pct": 5.2, "built_up_intensity_pct": 93.0, "albedo_index": 0.16, "elderly_pct": 15.6, "low_income_housing_pct": 58.0, "outdoor_worker_pct": 55.0, "healthcare_distance_km": 2.1, "cooling_facility_coverage_pct": 18.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 49.4, "air_temp_c": 43.9, "relative_humidity_pct": 19, "ndvi_vegetation_pct": 4.8, "built_up_intensity_pct": 93.2, "albedo_index": 0.16, "elderly_pct": 15.6, "low_income_housing_pct": 58.0, "outdoor_worker_pct": 55.0, "healthcare_distance_km": 2.1, "cooling_facility_coverage_pct": 18.0}
+      ]
+    },
+    {
+      "code": "AMD-KAL",
+      "name": "Kalupur Transit & Market",
+      "zone": "Central Commercial Zone",
+      "ward_number": "Ward 19",
+      "population_estimate": 78900,
+      "area_sq_km": 2.6,
+      "centroid_lat": 23.028,
+      "centroid_lng": 72.602,
+      "cooling_shelters_count": 2,
+      "public_water_points_count": 4,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.593, 23.021], [72.612, 23.021], [72.612, 23.035], [72.593, 23.035], [72.593, 23.021]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 41.5, "air_temp_c": 35.7, "relative_humidity_pct": 25, "ndvi_vegetation_pct": 6.2, "built_up_intensity_pct": 91.5, "albedo_index": 0.17, "elderly_pct": 14.1, "low_income_housing_pct": 49.0, "outdoor_worker_pct": 64.0, "healthcare_distance_km": 1.8, "cooling_facility_coverage_pct": 25.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 45.6, "air_temp_c": 40.0, "relative_humidity_pct": 22, "ndvi_vegetation_pct": 5.9, "built_up_intensity_pct": 91.5, "albedo_index": 0.17, "elderly_pct": 14.1, "low_income_housing_pct": 49.0, "outdoor_worker_pct": 64.0, "healthcare_distance_km": 1.8, "cooling_facility_coverage_pct": 25.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 49.1, "air_temp_c": 43.7, "relative_humidity_pct": 19, "ndvi_vegetation_pct": 5.5, "built_up_intensity_pct": 91.8, "albedo_index": 0.17, "elderly_pct": 14.1, "low_income_housing_pct": 49.0, "outdoor_worker_pct": 64.0, "healthcare_distance_km": 1.8, "cooling_facility_coverage_pct": 25.0}
+      ]
+    },
+    {
+      "code": "AMD-DAN",
+      "name": "Dani Limda",
+      "zone": "South Zone",
+      "ward_number": "Ward 37",
+      "population_estimate": 103400,
+      "area_sq_km": 4.6,
+      "centroid_lat": 22.996,
+      "centroid_lng": 72.586,
+      "cooling_shelters_count": 1,
+      "public_water_points_count": 2,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.574, 22.988], [72.598, 22.988], [72.598, 23.004], [72.574, 23.004], [72.574, 22.988]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 40.4, "air_temp_c": 35.1, "relative_humidity_pct": 26, "ndvi_vegetation_pct": 10.5, "built_up_intensity_pct": 80.5, "albedo_index": 0.20, "elderly_pct": 12.2, "low_income_housing_pct": 63.0, "outdoor_worker_pct": 60.0, "healthcare_distance_km": 2.9, "cooling_facility_coverage_pct": 16.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 44.2, "air_temp_c": 39.6, "relative_humidity_pct": 22, "ndvi_vegetation_pct": 9.9, "built_up_intensity_pct": 80.5, "albedo_index": 0.20, "elderly_pct": 12.2, "low_income_housing_pct": 63.0, "outdoor_worker_pct": 60.0, "healthcare_distance_km": 2.9, "cooling_facility_coverage_pct": 16.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 47.5, "air_temp_c": 43.2, "relative_humidity_pct": 20, "ndvi_vegetation_pct": 9.4, "built_up_intensity_pct": 81.0, "albedo_index": 0.20, "elderly_pct": 12.2, "low_income_housing_pct": 63.0, "outdoor_worker_pct": 60.0, "healthcare_distance_km": 2.9, "cooling_facility_coverage_pct": 16.0}
+      ]
+    },
+    {
+      "code": "AMD-ODH",
+      "name": "Odhav",
+      "zone": "East Industrial Zone",
+      "ward_number": "Ward 28",
+      "population_estimate": 96800,
+      "area_sq_km": 5.4,
+      "centroid_lat": 23.025,
+      "centroid_lng": 72.655,
+      "cooling_shelters_count": 1,
+      "public_water_points_count": 2,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.642, 23.015], [72.668, 23.015], [72.668, 23.034], [72.642, 23.034], [72.642, 23.015]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 41.2, "air_temp_c": null, "relative_humidity_pct": 24, "ndvi_vegetation_pct": 11.2, "built_up_intensity_pct": 82.0, "albedo_index": 0.19, "elderly_pct": 10.1, "low_income_housing_pct": 52.0, "outdoor_worker_pct": 62.0, "healthcare_distance_km": null, "cooling_facility_coverage_pct": 22.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 44.9, "air_temp_c": null, "relative_humidity_pct": 21, "ndvi_vegetation_pct": 10.6, "built_up_intensity_pct": 82.0, "albedo_index": 0.19, "elderly_pct": 10.1, "low_income_housing_pct": 52.0, "outdoor_worker_pct": 62.0, "healthcare_distance_km": null, "cooling_facility_coverage_pct": 22.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 48.2, "air_temp_c": null, "relative_humidity_pct": 19, "ndvi_vegetation_pct": 10.1, "built_up_intensity_pct": 82.5, "albedo_index": 0.19, "elderly_pct": 10.1, "low_income_housing_pct": 52.0, "outdoor_worker_pct": 62.0, "healthcare_distance_km": null, "cooling_facility_coverage_pct": 22.0}
+      ]
+    },
+    {
+      "code": "AMD-SHA",
+      "name": "Shahpur",
+      "zone": "Central North Zone",
+      "ward_number": "Ward 17",
+      "population_estimate": 69200,
+      "area_sq_km": 2.8,
+      "centroid_lat": 23.039,
+      "centroid_lng": 72.583,
+      "cooling_shelters_count": 2,
+      "public_water_points_count": 3,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.574, 23.032], [72.592, 23.032], [72.592, 23.046], [72.574, 23.046], [72.574, 23.032]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 39.8, "air_temp_c": 34.8, "relative_humidity_pct": 26, "ndvi_vegetation_pct": 12.8, "built_up_intensity_pct": 79.0, "albedo_index": 0.21, "elderly_pct": 14.9, "low_income_housing_pct": 44.0, "outdoor_worker_pct": 48.0, "healthcare_distance_km": 1.6, "cooling_facility_coverage_pct": 31.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 43.4, "air_temp_c": 39.0, "relative_humidity_pct": 22, "ndvi_vegetation_pct": 12.1, "built_up_intensity_pct": 79.0, "albedo_index": 0.21, "elderly_pct": 14.9, "low_income_housing_pct": 44.0, "outdoor_worker_pct": 48.0, "healthcare_distance_km": 1.6, "cooling_facility_coverage_pct": 31.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 46.1, "air_temp_c": 42.6, "relative_humidity_pct": 20, "ndvi_vegetation_pct": 11.7, "built_up_intensity_pct": 79.2, "albedo_index": 0.21, "elderly_pct": 14.9, "low_income_housing_pct": 44.0, "outdoor_worker_pct": 48.0, "healthcare_distance_km": 1.6, "cooling_facility_coverage_pct": 31.0}
+      ]
+    },
+    {
+      "code": "AMD-MAN",
+      "name": "Maninagar",
+      "zone": "South-Central Zone",
+      "ward_number": "Ward 35",
+      "population_estimate": 88400,
+      "area_sq_km": 4.2,
+      "centroid_lat": 22.997,
+      "centroid_lng": 72.610,
+      "cooling_shelters_count": 3,
+      "public_water_points_count": 5,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.599, 22.988], [72.622, 22.988], [72.622, 23.006], [72.599, 23.006], [72.599, 22.988]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 37.9, "air_temp_c": 33.9, "relative_humidity_pct": 28, "ndvi_vegetation_pct": 21.5, "built_up_intensity_pct": 67.0, "albedo_index": 0.24, "elderly_pct": 13.5, "low_income_housing_pct": 24.0, "outdoor_worker_pct": 31.0, "healthcare_distance_km": 1.2, "cooling_facility_coverage_pct": 52.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 41.3, "air_temp_c": 38.1, "relative_humidity_pct": 24, "ndvi_vegetation_pct": 20.6, "built_up_intensity_pct": 67.0, "albedo_index": 0.24, "elderly_pct": 13.5, "low_income_housing_pct": 24.0, "outdoor_worker_pct": 31.0, "healthcare_distance_km": 1.2, "cooling_facility_coverage_pct": 52.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 43.9, "air_temp_c": 41.4, "relative_humidity_pct": 22, "ndvi_vegetation_pct": 19.8, "built_up_intensity_pct": 67.5, "albedo_index": 0.24, "elderly_pct": 13.5, "low_income_housing_pct": 24.0, "outdoor_worker_pct": 31.0, "healthcare_distance_km": 1.2, "cooling_facility_coverage_pct": 52.0}
+      ]
+    },
+    {
+      "code": "AMD-SAT",
+      "name": "Satellite",
+      "zone": "West Zone",
+      "ward_number": "Ward 10",
+      "population_estimate": 91300,
+      "area_sq_km": 5.1,
+      "centroid_lat": 23.020,
+      "centroid_lng": 72.518,
+      "cooling_shelters_count": 3,
+      "public_water_points_count": 5,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.505, 23.012], [72.532, 23.012], [72.532, 23.028], [72.505, 23.028], [72.505, 23.012]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 37.2, "air_temp_c": 33.4, "relative_humidity_pct": 28, "ndvi_vegetation_pct": 24.2, "built_up_intensity_pct": 61.0, "albedo_index": 0.26, "elderly_pct": 12.8, "low_income_housing_pct": 14.0, "outdoor_worker_pct": 22.0, "healthcare_distance_km": 1.1, "cooling_facility_coverage_pct": 61.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 40.4, "air_temp_c": 37.5, "relative_humidity_pct": 24, "ndvi_vegetation_pct": 23.4, "built_up_intensity_pct": 61.0, "albedo_index": 0.26, "elderly_pct": 12.8, "low_income_housing_pct": 14.0, "outdoor_worker_pct": 22.0, "healthcare_distance_km": 1.1, "cooling_facility_coverage_pct": 61.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 42.8, "air_temp_c": 40.9, "relative_humidity_pct": 22, "ndvi_vegetation_pct": 22.8, "built_up_intensity_pct": 61.5, "albedo_index": 0.26, "elderly_pct": 12.8, "low_income_housing_pct": 14.0, "outdoor_worker_pct": 22.0, "healthcare_distance_km": 1.1, "cooling_facility_coverage_pct": 61.0}
+      ]
+    },
+    {
+      "code": "AMD-BOP",
+      "name": "Bopal",
+      "zone": "West Fringe Zone",
+      "ward_number": "Ward 07",
+      "population_estimate": 74500,
+      "area_sq_km": 5.8,
+      "centroid_lat": 23.034,
+      "centroid_lng": 72.478,
+      "cooling_shelters_count": 2,
+      "public_water_points_count": 4,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.465, 23.025], [72.492, 23.025], [72.492, 23.044], [72.465, 23.044], [72.465, 23.025]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 36.8, "air_temp_c": 33.0, "relative_humidity_pct": 29, "ndvi_vegetation_pct": 27.5, "built_up_intensity_pct": 54.0, "albedo_index": 0.27, "elderly_pct": 9.4, "low_income_housing_pct": 16.0, "outdoor_worker_pct": 26.0, "healthcare_distance_km": 1.9, "cooling_facility_coverage_pct": 54.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 40.1, "air_temp_c": 37.2, "relative_humidity_pct": 25, "ndvi_vegetation_pct": 26.2, "built_up_intensity_pct": 54.0, "albedo_index": 0.27, "elderly_pct": 9.4, "low_income_housing_pct": 16.0, "outdoor_worker_pct": 26.0, "healthcare_distance_km": 1.9, "cooling_facility_coverage_pct": 54.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 42.4, "air_temp_c": 40.5, "relative_humidity_pct": 23, "ndvi_vegetation_pct": 25.4, "built_up_intensity_pct": 54.5, "albedo_index": 0.27, "elderly_pct": 9.4, "low_income_housing_pct": 16.0, "outdoor_worker_pct": 26.0, "healthcare_distance_km": 1.9, "cooling_facility_coverage_pct": 54.0}
+      ]
+    },
+    {
+      "code": "AMD-NAV",
+      "name": "Navrangpura",
+      "zone": "West Institutional Zone",
+      "ward_number": "Ward 12",
+      "population_estimate": 64800,
+      "area_sq_km": 4.0,
+      "centroid_lat": 23.037,
+      "centroid_lng": 72.558,
+      "cooling_shelters_count": 4,
+      "public_water_points_count": 7,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.548, 23.028], [72.568, 23.028], [72.568, 23.046], [72.548, 23.046], [72.548, 23.028]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 35.4, "air_temp_c": 32.7, "relative_humidity_pct": 29, "ndvi_vegetation_pct": 33.8, "built_up_intensity_pct": 52.0, "albedo_index": 0.28, "elderly_pct": 11.9, "low_income_housing_pct": 11.0, "outdoor_worker_pct": 18.0, "healthcare_distance_km": 0.8, "cooling_facility_coverage_pct": 74.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 38.6, "air_temp_c": 36.8, "relative_humidity_pct": 25, "ndvi_vegetation_pct": 32.9, "built_up_intensity_pct": 52.0, "albedo_index": 0.28, "elderly_pct": 11.9, "low_income_housing_pct": 11.0, "outdoor_worker_pct": 18.0, "healthcare_distance_km": 0.8, "cooling_facility_coverage_pct": 74.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 40.9, "air_temp_c": 40.0, "relative_humidity_pct": 23, "ndvi_vegetation_pct": 32.1, "built_up_intensity_pct": 52.3, "albedo_index": 0.28, "elderly_pct": 11.9, "low_income_housing_pct": 11.0, "outdoor_worker_pct": 18.0, "healthcare_distance_km": 0.8, "cooling_facility_coverage_pct": 74.0}
+      ]
+    },
+    {
+      "code": "AMD-VAS",
+      "name": "Vastrapur",
+      "zone": "West Lake Zone",
+      "ward_number": "Ward 09",
+      "population_estimate": 67200,
+      "area_sq_km": 3.8,
+      "centroid_lat": 23.036,
+      "centroid_lng": 72.533,
+      "cooling_shelters_count": 3,
+      "public_water_points_count": 6,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.522, 23.028], [72.545, 23.028], [72.545, 23.045], [72.522, 23.045], [72.522, 23.028]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 34.8, "air_temp_c": 32.3, "relative_humidity_pct": 31, "ndvi_vegetation_pct": 36.5, "built_up_intensity_pct": 48.0, "albedo_index": 0.30, "elderly_pct": 11.0, "low_income_housing_pct": 9.5, "outdoor_worker_pct": 16.0, "healthcare_distance_km": 0.9, "cooling_facility_coverage_pct": 78.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 37.9, "air_temp_c": 36.4, "relative_humidity_pct": 27, "ndvi_vegetation_pct": 35.4, "built_up_intensity_pct": 48.0, "albedo_index": 0.30, "elderly_pct": 11.0, "low_income_housing_pct": 9.5, "outdoor_worker_pct": 16.0, "healthcare_distance_km": 0.9, "cooling_facility_coverage_pct": 78.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 40.1, "air_temp_c": 39.6, "relative_humidity_pct": 25, "ndvi_vegetation_pct": 34.6, "built_up_intensity_pct": 48.2, "albedo_index": 0.30, "elderly_pct": 11.0, "low_income_housing_pct": 9.5, "outdoor_worker_pct": 16.0, "healthcare_distance_km": 0.9, "cooling_facility_coverage_pct": 78.0}
+      ]
+    },
+    {
+      "code": "AMD-THA",
+      "name": "Thaltej",
+      "zone": "North-West Green Corridor",
+      "ward_number": "Ward 05",
+      "population_estimate": 58400,
+      "area_sq_km": 5.5,
+      "centroid_lat": 23.056,
+      "centroid_lng": 72.507,
+      "cooling_shelters_count": 3,
+      "public_water_points_count": 5,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.495, 23.048], [72.520, 23.048], [72.520, 23.065], [72.495, 23.065], [72.495, 23.048]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 34.1, "air_temp_c": 31.9, "relative_humidity_pct": 31, "ndvi_vegetation_pct": 41.2, "built_up_intensity_pct": 42.0, "albedo_index": 0.31, "elderly_pct": 10.2, "low_income_housing_pct": 8.0, "outdoor_worker_pct": 15.0, "healthcare_distance_km": 1.1, "cooling_facility_coverage_pct": 80.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 37.2, "air_temp_c": 35.9, "relative_humidity_pct": 27, "ndvi_vegetation_pct": 40.1, "built_up_intensity_pct": 42.0, "albedo_index": 0.31, "elderly_pct": 10.2, "low_income_housing_pct": 8.0, "outdoor_worker_pct": 15.0, "healthcare_distance_km": 1.1, "cooling_facility_coverage_pct": 80.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 39.2, "air_temp_c": 39.1, "relative_humidity_pct": 25, "ndvi_vegetation_pct": 39.4, "built_up_intensity_pct": 42.3, "albedo_index": 0.31, "elderly_pct": 10.2, "low_income_housing_pct": 8.0, "outdoor_worker_pct": 15.0, "healthcare_distance_km": 1.1, "cooling_facility_coverage_pct": 80.0}
+      ]
+    },
+    {
+      "code": "AMD-CHA",
+      "name": "Chandkheda",
+      "zone": "North Planned Zone",
+      "ward_number": "Ward 02",
+      "population_estimate": 71900,
+      "area_sq_km": 5.7,
+      "centroid_lat": 23.105,
+      "centroid_lng": 72.588,
+      "cooling_shelters_count": 3,
+      "public_water_points_count": 6,
+      "boundary_geojson": {
+        "type": "Polygon",
+        "coordinates": [[[72.575, 23.095], [72.602, 23.095], [72.602, 23.116], [72.575, 23.116], [72.575, 23.095]]]
+      },
+      "snapshots": [
+        {"observation_date": "2026-03-15", "land_surface_temp_c": 34.4, "air_temp_c": 32.1, "relative_humidity_pct": 30, "ndvi_vegetation_pct": 38.6, "built_up_intensity_pct": 45.0, "albedo_index": 0.29, "elderly_pct": 9.1, "low_income_housing_pct": 11.0, "outdoor_worker_pct": 19.0, "healthcare_distance_km": 1.3, "cooling_facility_coverage_pct": 76.0},
+        {"observation_date": "2026-04-15", "land_surface_temp_c": 37.5, "air_temp_c": 36.1, "relative_humidity_pct": 26, "ndvi_vegetation_pct": 37.8, "built_up_intensity_pct": 45.0, "albedo_index": 0.29, "elderly_pct": 9.1, "low_income_housing_pct": 11.0, "outdoor_worker_pct": 19.0, "healthcare_distance_km": 1.3, "cooling_facility_coverage_pct": 76.0},
+        {"observation_date": "2026-05-18", "land_surface_temp_c": 39.6, "air_temp_c": 39.3, "relative_humidity_pct": 24, "ndvi_vegetation_pct": 37.1, "built_up_intensity_pct": 45.4, "albedo_index": 0.29, "elderly_pct": 9.1, "low_income_housing_pct": 11.0, "outdoor_worker_pct": 19.0, "healthcare_distance_km": 1.3, "cooling_facility_coverage_pct": 76.0}
+      ]
+    }
+  ]
+}
